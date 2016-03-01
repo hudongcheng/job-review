@@ -1,12 +1,16 @@
 
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/job-review');
+var db = mongoose.connect('mongodb://localhost/job-review');
 
+//db.on('error', console.error.bind(console,'数据库连接错误:'));
+//db.once('open', function() {
+//  console.log('open mongodb');
+//})
 
 var Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId;
-    
+
 var Review = new Schema({
   author : ObjectId,
   title  : String,
@@ -14,12 +18,16 @@ var Review = new Schema({
   date   : Date
 })
 
-var User = new Schema({
+var UserSchema = new Schema({
+  name      : String,
   username  : String,
-  login     : String,
   email     : String,
-  date      : Date
+  password  : String,
+  admin     : Boolean
+//  date      : Date
 })
+
+db.model('User', UserSchema);
 
 var BlogPost = new Schema({
     author    : ObjectId,
@@ -27,3 +35,5 @@ var BlogPost = new Schema({
     body      : String,
     date      : Date
 });
+
+module.exports = db;
