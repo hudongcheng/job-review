@@ -67,78 +67,98 @@
 <script type="text/javascript">
   //增加
   $(".btn-primary").click(function(){
-    if($("table tr").hasClass("addtr") || $("table tr").hasClass("edittr")){
+    if($("table tr").hasClass("add-tr") || $("table tr").hasClass("edit-tr")){
       alert("先完成操作！！！");
   }else{
-  $("table tr:last").after('<tr class="addtr">'
-    + '<td><input type="text" name="names" value="" /></td>'
-    + '<td><input type="text" name="sexs" value="" /></td>'
-    + '<td><input type="text" name="ages" value="" /></td>'
+  $("table tr:last").after('<tr class="add-tr">'
+    + '<td><input type="text" name="catalog" value="" /></td>'
+    + '<td><input type="text" name="task" value="" /></td>'
+    + '<td><input type="text" name="content" value="" /></td>'
+    + '<td><input type="text" name="progress" value="" /></td>'
+    + '<td><input type="text" name="cost" value="" /></td>'
     + '<td><a href="javascript:;" class="btn save btn-info">保存</a> '
-      + '<a href="javascript:;" class="btn off btn-info">取消</a> </td>'
+      + '<a href="javascript:;" class="btn off btn-info">取消</api/users> </td>'
     + '</tr>');
   }
   })
 
   //保存
   $(document).on("click",".save",function(){
+  var catalog = $(this).parent().parent().find('input[name="catalog"]').val();
+  var task = $('input[name="task"]').val();
+  var content = $('input[name="content"]').val();
+  var progress = $('input[name="progress"]').val();
+  var cost = $('input[name="cost"]').val();
 
-  var name =$(this).parent().parent().find('input[name="names"]').val();
-  var sex =$('input[name="sexs"]').val();
-  var age =$('input[name="ages"]').val();
+  $.ajax({
+    type: "POST",
+    url: "/reviews/new",
+    data: {catalog: catalog, task: task, content: content, progress: progress, cost: cost},
+    dataType: "json",
+    success: function(data){
+      console.log(data);
+    }
+  });
 
   var n="";
-  n+='<td>'+name+'</td>';
-  n+='<td>'+sex+'</td>';
-  n+='<td>'+age+'</td>';
+  n+='<td>'+catalog+'</td>';
+  n+='<td>'+task+'</td>';
+  n+='<td>'+content+'</td>';
+  n+='<td>'+progress+'</td>';
+  n+='<td>'+cost+'</td>';
+
   n+='<td>';
     n+='<a href="javascript:;" class="btn edit btn-info"><span class="icon-edit"></span>修改</a>';
     n+='</td>';
-  $(this).parent().parent().removeClass("addtr edittr");
+  $(this).parent().parent().removeClass("add-tr edit-tr");
   $(this).parent().parent().html(n);
   })
 
-  var old_name = "";
-  var old_sex = "";
-  var old_age = "";
+  var old_catalog = "";
+  var old_task = "";
+  var old_content = "";
 
   //修改
   $(document).on("click",".edit",function() {
-  if($("table tr").hasClass("addtr") || $("table tr").hasClass("edittr")) {
+  if($("table tr").hasClass("add-tr") || $("table tr").hasClass("edit-tr")) {
   alert("先完成操作！！！");
   }else{
-  var name =$(this).parent().parent().find('td').eq(0).text();
-  var sex =$(this).parent().parent().find('td').eq(1).text();
-  var age =$(this).parent().parent().find('td').eq(2).text();
+  var catalog = old_catalog = $(this).parent().parent().find('td').eq(0).text();
+  var task = old_task = $(this).parent().parent().find('td').eq(1).text();
+  var content = old_content = $(this).parent().parent().find('td').eq(2).text();
+  var progress = old_progress = $(this).parent().parent().find('td').eq(3).text();
+  var cost = old_cost = $(this).parent().parent().find('td').eq(4).text();
 
-  old_name = name;
-  old_sex = sex;
-  old_age = age;
+  var n = "";
+  n += '<td><input type="text" name="catalog" value="' + catalog + '" /></td>';
+  n += '<td><input type="text" name="task" value="' + task + '" /></td>';
+  n += '<td><input type="text" name="content" value="' + content + '" /></td>';
+  n += '<td><input type="text" name="progress" value="' + progress + '" /></td>';
+  n += '<td><input type="text" name="cost" value="' + cost + '" /></td>';
+  n += '<td>';
+  n += '<a href="javascript:;" class="btn save btn-info">保存</a>';
+  n += '<a href="javascript:;" class="btn off btn-info">取消</a>';
+  n += '</td>';
 
-  var n="";
-  n+='<td><input type="text" name="names" value="'+name+'" /></td>';
-  n+=' <td><input type="text" name="sexs" value="'+sex+'" /></td>';
-  n+='  <td><input type="text" name="ages" value="'+age+'" /></td>';
-  n+=' <td>';
-    n+='  <a href="javascript:;" class="btn save btn-info">保存</a>';
-    n+='  <a href="javascript:;" class="btn off btn-info">取消</a>';
-    n+=' </td>';
-  $(this).parent().parent().addClass("edittr");
+  $(this).parent().parent().addClass("edit-tr");
   $(this).parent().parent().html(n);
   }
 
   })
 
   $(document).on("click",".off",function(){
-  if ($("table tr").hasClass("edittr")) {
-  var n="";
-  n+='<td>'+old_name+'</td>';
-  n+='<td>'+old_sex+'</td>';
-  n+='<td>'+old_age+'</td>';
-  n+='<td>';
-    n+='<a href="javascript:;" class="btn edit btn-info"><span class="icon-edit"></span>修改</a>';
-    n+='</td>';
-  $(this).parent().parent().removeClass("edittr");
+  if ($("table tr").hasClass("edit-tr")) {
+  var n = "";
+  n += '<td>' + old_catalog + '</td>';
+  n += '<td>' + old_task + '</td>';
+  n += '<td>' + old_content + '</td>';
+  n += '<td>' + old_progress + '</td>';
+  n += '<td>' + old_cost + '</td>';
+  n += '<td>';
+  n += '<a href="javascript:;" class="btn edit btn-info"><span class="icon-edit"></span>修改</a>';
+  n += '</td>';
+
+  $(this).parent().parent().removeClass("edit-tr");
   $(this).parent().parent().html(n);
   }
   else {
