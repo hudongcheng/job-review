@@ -18,15 +18,33 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.post('/new', function(req, res, next) {
+router.post('/', function(req, res, next) {
   var review = ReviewModel(req.body);
   review.save();
   res.json({r:'OK'});
 })
 
 
+router.put('/:id', function(req, res, next) {
+  ReviewModel.findByIdAndUpdate(req.params['id'], req.body, function(err) {
+    //if (err) return handleError(err);
+    res.json({status:'success', message:'udate review success'});
+  })
+})
+
+
+router.delete('/:id', function(req, res, next) {
+  //req.params['id'];
+  ReviewModel.remove({_id: req.params['id']}, function (err) {
+    //if (err) return handleError(err);
+  })
+  res.json({status:'success', message:'delete review success'});
+})
+
+/*
 router.get('/new', function(req, res, next) {
   res.render('reviews/new', { title: 'Express' });
 })
+ */
 
 module.exports = router;
