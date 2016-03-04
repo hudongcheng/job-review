@@ -1,7 +1,12 @@
 var express = require('express');
 var router = express.Router();
-
 var ReviewModel = require('../models/db').model('Review');
+var hbs = require('hbs');
+
+hbs.registerHelper('', function() {
+
+});
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
